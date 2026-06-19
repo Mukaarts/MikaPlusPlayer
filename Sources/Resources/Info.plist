@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+
+	<!-- Sparkle Auto-Updater (nur macOS relevant; iOS ignoriert die Keys).
+	     SUFeedURL: appcast.xml im GitHub-Repo. SUPublicEDKey: familienweiter
+	     EdDSA-Public-Key (Private Key liegt in der Keychain). -->
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/Mukaarts/MikaPlusPlayer/main/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>eauiHgP4PM9ynLekAmo3URrX3ye3HW7D53xOZa5AeYI=</string>
+	<key>SUEnableAutomaticChecks</key>
+	<true/>
+
+	<!-- App Transport Security: IPTV-Streams laufen häufig über reines HTTP.
+	     NSAllowsArbitraryLoads erlaubt unverschlüsselte Verbindungen. Für den
+	     App-Store-Review ggf. auf NSExceptionDomains einschränken. -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
+
+	<!-- Leerer Launch-Screen -> volle Bildschirmauflösung auf iOS (kein Letterbox). -->
+	<key>UILaunchScreen</key>
+	<dict/>
+
+	<!-- Unterstützte Geräteorientierungen (iOS). -->
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+	<key>UISupportedInterfaceOrientations~ipad</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+	</array>
+
+	<!-- Audio-Wiedergabe im Hintergrund / bei gesperrtem Bildschirm (iOS). -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
+
+	<!-- Importierbare Dokumenttypen: M3U/M3U8-Playlists. -->
+	<key>CFBundleDocumentTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeName</key>
+			<string>M3U Playlist</string>
+			<key>LSHandlerRank</key>
+			<string>Default</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>public.m3u-playlist</string>
+				<string>public.text</string>
+			</array>
+		</dict>
+	</array>
+</dict>
+</plist>
