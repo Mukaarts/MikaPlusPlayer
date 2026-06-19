@@ -1,0 +1,13 @@
+# Xcode / XcodeGen
+MikaPlusPlayer.xcodeproj/
+*.xcworkspace/
+xcuserdata/
+DerivedData/
+
+# Build- und Release-Artefakte
+build/
+dist/
+*.dmg
+
+# macOS
+.DS_Store

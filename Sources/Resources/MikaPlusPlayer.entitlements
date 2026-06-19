@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- DMG-Distribution (kein App Store): Sandbox deaktiviert, damit der
+	     Sparkle-Updater wie bei den anderen Mika+ Apps funktioniert. -->
+	<key>com.apple.security.app-sandbox</key>
+	<false/>
+	<!-- Erlaubt das Laden der eingebetteten Sparkle.framework / XPC-Dienste
+	     unter Hardened Runtime (besonders bei Ad-hoc-Signatur). -->
+	<key>com.apple.security.cs.disable-library-validation</key>
+	<true/>
+</dict>
+</plist>
