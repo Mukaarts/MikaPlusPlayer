@@ -5,6 +5,10 @@ import SwiftData
 /// Der Card-Rahmen wird vom Aufrufer via `.playerCard()` gesetzt.
 struct ChannelRowView: View {
     @Environment(\.modelContext) private var modelContext
+    #if os(macOS)
+    @Environment(MultiviewSession.self) private var multiview
+    @Environment(\.openWindow) private var openWindow
+    #endif
     @Bindable var channel: Channel
 
     var body: some View {
@@ -20,6 +24,9 @@ struct ChannelRowView: View {
                 }
             }
             Spacer(minLength: 8)
+            #if os(macOS)
+            multiviewButton
+            #endif
             favoriteButton
         }
     }
@@ -60,4 +67,21 @@ struct ChannelRowView: View {
         }
         .buttonStyle(.plain)
     }
+
+    #if os(macOS)
+    /// Fügt den Sender zum Multiview hinzu und öffnet das Multiview-Fenster.
+    private var multiviewButton: some View {
+        Button {
+            multiview.add(channel)
+            openWindow(id: "multiview")
+        } label: {
+            Image(systemName: "rectangle.split.2x2")
+                .font(.title3)
+                .foregroundStyle(multiview.canAddMore ? Color.secondary : Color.secondary.opacity(0.3))
+        }
+        .buttonStyle(.plain)
+        .disabled(!multiview.canAddMore)
+        .help(multiview.canAddMore ? "Zu Multiview hinzufügen" : "Multiview voll (max. 4)")
+    }
+    #endif
 }

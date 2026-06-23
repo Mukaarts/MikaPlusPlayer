@@ -125,7 +125,7 @@ struct PlayerBadge: View {
             if let systemImage {
                 Image(systemName: systemImage).font(.caption2.weight(.semibold))
             }
-            Text(text).font(.caption.weight(.semibold)).monospacedDigit()
+            Text(text).font(.caption.weight(.semibold)).monospacedDigit().lineLimit(1)
         }
         .padding(.horizontal, 8)
         .padding(.vertical, 4)
