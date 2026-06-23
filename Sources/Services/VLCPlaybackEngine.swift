@@ -55,7 +55,9 @@ final class VLCPlaybackEngine: NSObject, PlaybackEngine {
         applyAudio()
     }
 
-    func toggleMute() { isMuted.toggle(); applyAudio() }
+    func toggleMute() { setMuted(!isMuted) }
+
+    func setMuted(_ muted: Bool) { isMuted = muted; applyAudio() }
 
     /// Wendet `volume`/`isMuted` auf den VLC-Audiokanal an. `mediaPlayer.audio` ist
     /// vor Wiedergabestart oft `nil`, daher wird dies auch beim Übergang nach `.playing`

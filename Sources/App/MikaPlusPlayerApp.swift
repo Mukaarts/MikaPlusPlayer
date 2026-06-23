@@ -17,11 +17,16 @@ struct MikaPlusPlayerApp: App {
     #if os(macOS)
     /// Sparkle-Auto-Updater (nur macOS).
     @State private var updater = SparkleUpdater()
+    /// Geteilte Multiview-Session (nur macOS): erreicht Haupt- und Multiview-Fenster.
+    @State private var multiview = MultiviewSession()
     #endif
 
     var body: some Scene {
         WindowGroup {
             ContentView()
+            #if os(macOS)
+                .environment(multiview)
+            #endif
         }
         .modelContainer(modelContainer)
         #if os(macOS)
@@ -34,6 +39,19 @@ struct MikaPlusPlayerApp: App {
                 .disabled(!updater.canCheckForUpdates)
             }
         }
+        #endif
+
+        // Eigenständiges Multiview-Fenster (mehrere Streams gleichzeitig).
+        // Dieselbe `multiview`-Instanz wie das Hauptfenster – so wirken die
+        // „⊞"-Buttons der Senderliste live auf dieses Fenster.
+        #if os(macOS)
+        Window("Multiview", id: "multiview") {
+            MultiviewScreen()
+                .environment(multiview)
+        }
+        .modelContainer(modelContainer)
+        .windowResizability(.contentMinSize)
+        .defaultSize(width: 1280, height: 720)
         #endif
     }
 }

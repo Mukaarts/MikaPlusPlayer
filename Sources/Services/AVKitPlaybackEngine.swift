@@ -36,7 +36,9 @@ final class AVKitPlaybackEngine: PlaybackEngine {
         if volume > 0, isMuted { isMuted = false; player.isMuted = false }
     }
 
-    func toggleMute() { isMuted.toggle(); player.isMuted = isMuted }
+    func toggleMute() { setMuted(!isMuted) }
+
+    func setMuted(_ muted: Bool) { isMuted = muted; player.isMuted = muted }
 
     func makePlayerView() -> AnyView {
         AnyView(VideoPlayer(player: player).ignoresSafeArea())

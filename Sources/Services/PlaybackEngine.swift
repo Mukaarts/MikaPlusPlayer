@@ -49,6 +49,9 @@ protocol PlaybackEngine: AnyObject, Observable {
     func togglePlayPause()
     /// Schaltet die Stummschaltung um.
     func toggleMute()
+    /// Setzt die Stummschaltung deterministisch (idempotent). Für Multiview-Audio-Fokus,
+    /// wo `toggleMute()` bei mehrfachen Fokuswechseln aus dem Tritt geraten könnte.
+    func setMuted(_ muted: Bool)
     /// Setzt die Lautstärke; clamped auf 0…1 und hebt Stummschaltung bei Werten > 0 auf.
     func setVolume(_ value: Double)
     /// Liefert die SwiftUI-Oberfläche für diese Engine (VideoPlayer bzw.
