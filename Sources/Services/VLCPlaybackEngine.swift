@@ -23,6 +23,9 @@ import VLCKit
 @Observable
 final class VLCPlaybackEngine: NSObject, PlaybackEngine {
     private(set) var state: PlaybackState = .idle
+    private(set) var isPaused = false
+    private(set) var volume: Double = 1.0
+    private(set) var isMuted = false
 
     @ObservationIgnored private let mediaPlayer = VLCMediaPlayer()
     // Der View, auf den VLC rendert. Wird vom Representable gesetzt.
@@ -39,10 +42,30 @@ final class VLCPlaybackEngine: NSObject, PlaybackEngine {
         let media = VLCMedia(url: url)
         mediaPlayer.media = media
         mediaPlayer.play()
+        isPaused = false
     }
 
-    func play() { mediaPlayer.play() }
-    func pause() { if mediaPlayer.isPlaying { mediaPlayer.pause() } }
+    func play() { mediaPlayer.play(); isPaused = false }
+    func pause() { if mediaPlayer.isPlaying { mediaPlayer.pause() }; isPaused = true }
+    func togglePlayPause() { isPaused ? play() : pause() }
+
+    func setVolume(_ value: Double) {
+        volume = min(1, max(0, value))
+        if volume > 0 { isMuted = false }
+        applyAudio()
+    }
+
+    func toggleMute() { isMuted.toggle(); applyAudio() }
+
+    /// Wendet `volume`/`isMuted` auf den VLC-Audiokanal an. `mediaPlayer.audio` ist
+    /// vor Wiedergabestart oft `nil`, daher wird dies auch beim Übergang nach `.playing`
+    /// erneut aufgerufen (siehe Delegate), damit die Soll-Werte greifen.
+    private func applyAudio() {
+        guard let audio = mediaPlayer.audio else { return }
+        audio.volume = Int32(volume * 100)
+        // VLCAudio: @property (getter=isMuted) BOOL muted; -> in Swift settable als isMuted.
+        audio.isMuted = isMuted
+    }
 
     func makePlayerView() -> AnyView {
         AnyView(VLCPlayerSurface(view: drawableView).ignoresSafeArea())
@@ -59,6 +82,8 @@ extension VLCPlaybackEngine: VLCMediaPlayerDelegate {
             switch self.mediaPlayer.state {
             case .playing, .buffering, .esAdded:
                 self.state = .playing
+                // Audiokanal existiert jetzt – Soll-Lautstärke/Stumm anwenden.
+                self.applyAudio()
             case .opening:
                 self.state = .loading
             case .error:

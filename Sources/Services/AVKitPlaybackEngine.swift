@@ -9,6 +9,9 @@ import Combine
 @Observable
 final class AVKitPlaybackEngine: PlaybackEngine {
     private(set) var state: PlaybackState = .idle
+    private(set) var isPaused = false
+    private(set) var volume: Double = 1.0
+    private(set) var isMuted = false
 
     @ObservationIgnored private let player = AVPlayer()
     @ObservationIgnored private var statusObserver: AnyCancellable?
@@ -20,10 +23,20 @@ final class AVKitPlaybackEngine: PlaybackEngine {
         observe(item)
         player.replaceCurrentItem(with: item)
         player.play()
+        isPaused = false
     }
 
-    func play() { player.play() }
-    func pause() { player.pause() }
+    func play() { player.play(); isPaused = false }
+    func pause() { player.pause(); isPaused = true }
+    func togglePlayPause() { isPaused ? play() : pause() }
+
+    func setVolume(_ value: Double) {
+        volume = min(1, max(0, value))
+        player.volume = Float(volume)
+        if volume > 0, isMuted { isMuted = false; player.isMuted = false }
+    }
+
+    func toggleMute() { isMuted.toggle(); player.isMuted = isMuted }
 
     func makePlayerView() -> AnyView {
         AnyView(VideoPlayer(player: player).ignoresSafeArea())
