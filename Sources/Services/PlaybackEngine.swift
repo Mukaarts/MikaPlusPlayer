@@ -35,9 +35,22 @@ enum PlaybackState: Equatable {
 @MainActor
 protocol PlaybackEngine: AnyObject, Observable {
     var state: PlaybackState { get }
+    /// Pausiert? Getrennt nachgehalten – `PlaybackState` kennt bewusst kein `.paused`.
+    var isPaused: Bool { get }
+    /// Stummgeschaltet (unabhängig vom Lautstärke-Wert).
+    var isMuted: Bool { get }
+    /// Lautstärke, normalisiert auf 0…1 (engine-unabhängig).
+    var volume: Double { get }
+
     func load(_ url: URL)
     func play()
     func pause()
+    /// Schaltet zwischen Wiedergabe und Pause um (anhand `isPaused`).
+    func togglePlayPause()
+    /// Schaltet die Stummschaltung um.
+    func toggleMute()
+    /// Setzt die Lautstärke; clamped auf 0…1 und hebt Stummschaltung bei Werten > 0 auf.
+    func setVolume(_ value: Double)
     /// Liefert die SwiftUI-Oberfläche für diese Engine (VideoPlayer bzw.
     /// ein in SwiftUI eingebetteter VLC-Drawable-View).
     func makePlayerView() -> AnyView
